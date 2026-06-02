@@ -1,0 +1,31 @@
+{
+  "sign": {
+    "type": "modules",
+    "colorScheme": "orientação",
+    "confidence": 1.0,
+    "modules": [
+      {
+        "justification": "left",
+        "elements": [ { "type": "arrow", "direction": "right" } ],
+        "lines": [
+          { "text": "Paulo Frontin", "fontSize": 150 },
+          { "text": "Rebouças", "fontSize": 150 }
+        ]
+      },
+      {
+        "justification": "left",
+        "backColor": "blue",
+        "lines": [
+          {
+            "text": "BR-476",
+            "fontSize": 150,
+            "elements": [
+              { "type": "arrow", "direction": "up-left", "position": "before" },
+              { "type": "shield", "network": "PR", "number": "476", "position": "before" }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

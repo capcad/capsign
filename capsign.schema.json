@@ -1,0 +1,269 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/REPLACE_ME/capsign-schema/capsign.schema.json",
+  "title": "CapSign Sign Description Schema",
+  "description": "A machine-readable description of the compositional layout of a Brazilian road sign (CONTRAN / DNIT IPR-743), sufficient to redraw it. Describes the FACE of a static fabricated sign: its type, colour category, and the panels, lines, arrows, pictograms, shields and badges that compose it. This schema is an interface contract; it deliberately contains no rendering, CAD, or implementation detail.",
+
+  "oneOf": [
+    {
+      "type": "object",
+      "required": ["sign"],
+      "properties": { "sign": { "$ref": "#/$defs/sign" } },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": ["signs"],
+      "properties": {
+        "signs": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/sign" }
+        }
+      },
+      "additionalProperties": false
+    }
+  ],
+
+  "$defs": {
+
+    "colorToken": {
+      "description": "A named colour from the CONTRAN palette. Never a hex value.",
+      "type": "string",
+      "enum": ["green", "blue", "white", "yellow", "brown", "red"]
+    },
+
+    "colorScheme": {
+      "description": "The sign's colour category, determined by the BODY of the sign (not a header module). Maps to a CONTRAN signage category.",
+      "type": "string",
+      "enum": ["orientação", "indicativa", "turístico", "advertência", "regulamentação"]
+    },
+
+    "justification": {
+      "description": "Horizontal alignment of a module's content.",
+      "type": "string",
+      "enum": ["left", "center", "right"]
+    },
+
+    "position": {
+      "description": "Placement of an element relative to its line or module. 'before' = leading edge (left for LTR), 'after' = trailing edge (right for LTR), 'behind' = layered behind the text.",
+      "type": "string",
+      "enum": ["before", "after", "behind"]
+    },
+
+    "arrowDirection": {
+      "description": "Direction an arrow points. Eight-point compass subset used on guide signs.",
+      "type": "string",
+      "enum": ["left", "right", "up", "down", "up-right", "up-left", "down-right", "down-left"]
+    },
+
+    "fontSize": {
+      "description": "Relative text size. The largest text on the sign is 150; all others are scaled relative to it. Not a point size or millimetre value.",
+      "type": "number",
+      "exclusiveMinimum": 0,
+      "maximum": 150
+    },
+
+    "confidence": {
+      "description": "Producer's confidence in the description. 1.0 fully legible/unambiguous; 0.8+ minor uncertainty; 0.6+ partial obscuration with '?' chars; <0.6 flag for human review.",
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+
+    "arrowElement": {
+      "type": "object",
+      "required": ["type", "direction"],
+      "properties": {
+        "type": { "const": "arrow" },
+        "direction": { "$ref": "#/$defs/arrowDirection" },
+        "position": { "$ref": "#/$defs/position" }
+      },
+      "additionalProperties": false
+    },
+
+    "pictogramElement": {
+      "type": "object",
+      "required": ["type", "id"],
+      "properties": {
+        "type": { "const": "pictogram" },
+        "id": {
+          "description": "Pictogram identifier. Either a descriptive lowercase term (e.g. 'fuel', 'rural-tourism') or an official CONTRAN code (e.g. 'A-2a', 'R-19').",
+          "type": "string",
+          "minLength": 1
+        },
+        "position": { "$ref": "#/$defs/position" }
+      },
+      "additionalProperties": false
+    },
+
+    "shieldElement": {
+      "type": "object",
+      "required": ["type", "network", "number"],
+      "properties": {
+        "type": { "const": "shield" },
+        "network": {
+          "description": "Highway network: 'BR' for federal, or a state abbreviation (e.g. 'PR', 'SP').",
+          "type": "string",
+          "minLength": 1
+        },
+        "number": {
+          "description": "Route number as a string (preserves any leading zeros).",
+          "type": "string",
+          "minLength": 1
+        },
+        "state": {
+          "description": "Optional state abbreviation when the network alone does not disambiguate.",
+          "type": "string"
+        },
+        "position": { "$ref": "#/$defs/position" }
+      },
+      "additionalProperties": false
+    },
+
+    "element": {
+      "description": "A graphic element attached to a module or a line: an arrow, a pictogram, or a route shield.",
+      "oneOf": [
+        { "$ref": "#/$defs/arrowElement" },
+        { "$ref": "#/$defs/pictogramElement" },
+        { "$ref": "#/$defs/shieldElement" }
+      ]
+    },
+
+    "segment": {
+      "description": "A run of text within a line that may carry its own background. Used to build inline mixed-background lines (e.g. a destination followed by a coloured route plate).",
+      "type": "object",
+      "required": ["text", "fontSize"],
+      "properties": {
+        "text": { "type": "string" },
+        "fontSize": { "$ref": "#/$defs/fontSize" },
+        "backColor": { "$ref": "#/$defs/colorToken" },
+        "fontColor": { "$ref": "#/$defs/colorToken" }
+      },
+      "additionalProperties": false
+    },
+
+    "lineObject": {
+      "description": "A single line of content within a module.",
+      "type": "object",
+      "required": ["text"],
+      "properties": {
+        "text": {
+          "description": "The line's text. Use '?' for each illegible character; never complete a word from outside knowledge.",
+          "type": "string"
+        },
+        "fontSize": { "$ref": "#/$defs/fontSize" },
+        "km": {
+          "description": "Distance in kilometres, for orientação signs where this line has a km column. Integer.",
+          "type": "integer",
+          "minimum": 0
+        },
+        "elements": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/element" }
+        },
+        "backColor": { "$ref": "#/$defs/colorToken" },
+        "fontColor": { "$ref": "#/$defs/colorToken" }
+      },
+      "additionalProperties": false
+    },
+
+    "segmentArray": {
+      "description": "A line expressed as a left-to-right sequence of segments. Use ONLY when the colour changes inline within one line. A whole line with a single background stays a lineObject with a line-level backColor.",
+      "type": "array",
+      "minItems": 2,
+      "items": { "$ref": "#/$defs/segment" }
+    },
+
+    "line": {
+      "description": "A module line: either a single line object, or an array of segments for inline mixed-background lines.",
+      "oneOf": [
+        { "$ref": "#/$defs/lineObject" },
+        { "$ref": "#/$defs/segmentArray" }
+      ]
+    },
+
+    "module": {
+      "description": "A panel of the sign. Separate modules exist only where a VISIBLE DIVIDING BORDER separates panels; a coloured badge floating inside a panel is a line backColor, not a module.",
+      "type": "object",
+      "required": ["lines"],
+      "properties": {
+        "justification": { "$ref": "#/$defs/justification" },
+        "elements": {
+          "description": "Module-level elements (e.g. an arrow spanning multiple lines).",
+          "type": "array",
+          "items": { "$ref": "#/$defs/element" }
+        },
+        "lines": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/line" }
+        },
+        "backColor": { "$ref": "#/$defs/colorToken" },
+        "fontColor": { "$ref": "#/$defs/colorToken" }
+      },
+      "additionalProperties": false
+    },
+
+    "sign": {
+      "type": "object",
+      "required": ["type", "confidence"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["modules", "orientação", "pictograms", "tree", "special"]
+        },
+        "colorScheme": { "$ref": "#/$defs/colorScheme" },
+        "confidence": { "$ref": "#/$defs/confidence" },
+        "modules": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/module" }
+        },
+        "pictograms": {
+          "description": "For type 'pictograms': an ordered list of pictogram ids.",
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "footer": {
+          "description": "For type 'pictograms': optional footer text below the pictogram row.",
+          "type": "string"
+        },
+        "width": {
+          "description": "For type 'tree' or 'special': overall width in millimetres.",
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "height": {
+          "description": "For type 'tree' or 'special': overall height in millimetres.",
+          "type": "number",
+          "exclusiveMinimum": 0
+        }
+      },
+
+      "allOf": [
+        {
+          "if": { "properties": { "type": { "const": "modules" } } },
+          "then": { "required": ["colorScheme", "modules"] }
+        },
+        {
+          "if": { "properties": { "type": { "const": "orientação" } } },
+          "then": { "required": ["colorScheme", "modules"] }
+        },
+        {
+          "if": { "properties": { "type": { "const": "pictograms" } } },
+          "then": { "required": ["colorScheme", "pictograms"] }
+        },
+        {
+          "if": { "properties": { "type": { "const": "tree" } } },
+          "then": { "required": ["width", "height"] }
+        },
+        {
+          "if": { "properties": { "type": { "const": "special" } } },
+          "then": { "required": ["width", "height"] }
+        }
+      ],
+
+      "additionalProperties": false
+    }
+  }
+}

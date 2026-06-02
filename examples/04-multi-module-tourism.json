@@ -1,0 +1,25 @@
+{
+  "sign": {
+    "type": "modules",
+    "colorScheme": "turístico",
+    "confidence": 0.97,
+    "modules": [
+      {
+        "justification": "left",
+        "backColor": "blue",
+        "fontColor": "white",
+        "elements": [ { "type": "arrow", "direction": "left", "position": "before" } ],
+        "lines": [ { "text": "CEMITÉRIO", "fontSize": 150 } ]
+      },
+      {
+        "justification": "left",
+        "elements": [ { "type": "arrow", "direction": "left", "position": "before" } ],
+        "lines": [
+          { "text": "Turismo Rural", "fontSize": 130, "elements": [ { "type": "pictogram", "id": "rural-tourism", "position": "before" } ] },
+          { "text": "Colônia Mergulhão", "fontSize": 130, "elements": [ { "type": "pictogram", "id": "rural-tourism", "position": "before" } ] },
+          { "text": "Colônia Murici", "fontSize": 130, "elements": [ { "type": "pictogram", "id": "rural-tourism", "position": "before" } ] }
+        ]
+      }
+    ]
+  }
+}

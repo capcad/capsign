@@ -1,0 +1,23 @@
+{
+  "sign": {
+    "type": "modules",
+    "colorScheme": "orientação",
+    "confidence": 1.0,
+    "modules": [
+      {
+        "justification": "left",
+        "elements": [
+          { "type": "arrow", "direction": "up" }
+        ],
+        "lines": [
+          { "text": "Florianópolis", "fontSize": 150 },
+          { "text": "São Paulo", "fontSize": 150 },
+          [
+            { "text": "P. Alegre", "fontSize": 150 },
+            { "text": "BR-101", "fontSize": 150, "backColor": "blue" }
+          ]
+        ]
+      }
+    ]
+  }
+}

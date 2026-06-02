@@ -1,0 +1,17 @@
+{
+  "sign": {
+    "type": "modules",
+    "colorScheme": "advertência",
+    "confidence": 1.0,
+    "modules": [
+      {
+        "justification": "center",
+        "elements": [
+          { "type": "pictogram", "id": "A-18" },
+          { "type": "arrow", "direction": "down-left" }
+        ],
+        "lines": []
+      }
+    ]
+  }
+}

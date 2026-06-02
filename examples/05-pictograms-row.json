@@ -1,0 +1,9 @@
+{
+  "sign": {
+    "type": "pictograms",
+    "colorScheme": "indicativa",
+    "confidence": 1.0,
+    "pictograms": ["fuel", "restaurant", "tyre", "lodging"],
+    "footer": "A 300 m"
+  }
+}

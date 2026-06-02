@@ -1,0 +1,15 @@
+{
+  "sign": {
+    "type": "orientação",
+    "colorScheme": "orientação",
+    "confidence": 1.0,
+    "modules": [
+      {
+        "lines": [
+          { "text": "Curitiba", "km": 85, "fontSize": 150 },
+          { "text": "Ponta Grossa", "km": 23, "fontSize": 150 }
+        ]
+      }
+    ]
+  }
+}
