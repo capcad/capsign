@@ -1,5 +1,7 @@
 # CapSign Schema
 
+**English** · [Português](README.pt-BR.md)
+
 A machine-readable schema for describing the **layout of Brazilian road signs** (CONTRAN / DNIT IPR-743) — enough to redraw a sign's face, not merely to catalogue where it is installed.
 
 CapSign describes the **composition** of a static, fabricated sign: its type, colour category, and the panels, text lines, arrows, pictograms, route shields and badges that make it up. It is an **interface contract** between anything that *recognises or authors* a sign and anything that *draws, validates, or stores* it.
